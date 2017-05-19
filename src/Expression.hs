@@ -1,35 +1,26 @@
 module Expression where
 
 data Function = Function String Int Expression
-  deriving (Show, Eq)
+              deriving(Show,Eq)
 
 data Expression = Literal Integer
                 | Decimal Float
                 | Symbol String
                 | Infinity
+                | Operation String Expression Expression
                 | Application Function [Expression]
                 deriving(Show, Eq)
 
-data Equation = Equals        Expression Expression
-              | Less          Expression Expression
-              | Greater       Expression Expression
-              | LessEquals    Expression Expression
-              | GreaterEquals Expression Expression
-              | Approximates  Expression Expression
-              deriving(Show, Eq)
+reduce :: Expression -> Expression
+reduce expr@(Literal x)      = expr
+reduce expr@(Decimal x)      = expr
+reduce expr@(Symbol x)       = expr
+reduce Infinity              = Infinity
+reduce (Application fn args) = undefined
 
-lhs :: Equation -> Expression
-lhs (Equals x _) = x
-lhs (Less x _) = x
-lhs (Greater x _) = x
-lhs (LessEquals x _) = x
-lhs (GreaterEquals x _) = x
-lhs (Approximates x _) = x
-
-rhs :: Equation -> Expression
-rhs (Equals _ y) = y
-rhs (Less _ y) = y
-rhs (Greater _ y) = y
-rhs (LessEquals _ y) = y
-rhs (GreaterEquals _ y) = y
-rhs (Approximates _ y) = y
+evaluate :: Num a => Expression -> Maybe a
+evaluate (Literal x)           = Just x
+evaluate (Decimal x)           = Just x
+evaluate (Symbol s)            = Nothing
+evaluate Infinity              = Nothing
+evaluate (Application fn args) = undefined
