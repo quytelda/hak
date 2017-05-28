@@ -1,0 +1,8 @@
+# Compiled files
+*.hi
+*.o
+
+# Temporary Files
+*~
+\#*#
+*.old
